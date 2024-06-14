@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Interface</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <h2>Conversations</h2>
+        <ul id="conversation-list"></ul>
+    </div>
+    <div class="main">
+        <div class="context-box" id="context-box">
+            <h2>Context</h2>
+            <textarea id="context-input" rows="4"></textarea>
+            <button onclick="submitContext()">Submit Context</button>
+            <button onclick="toggleContextBox()">Minimize</button>
+        </div>
+        <div class="chat-window" id="chat-window">
+            <div id="messages"></div>
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>
