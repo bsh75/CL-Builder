@@ -1,54 +1,59 @@
-document.addEventListener("DOMContentLoaded", () => {
-    loadConversations();
+document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('user-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
 });
 
-function submitContext() {
-    const context = document.getElementById('context-input').value;
-    // Call your API to submit context
-    console.log('Context submitted:', context);
-}
+document.getElementById('set-context-btn').addEventListener('click', setContext);
+document.getElementById('minimize-context-btn').addEventListener('click', toggleContext);
 
-function toggleContextBox() {
-    const contextBox = document.getElementById('context-box');
-    if (contextBox.style.display === 'none') {
-        contextBox.style.display = 'block';
-    } else {
-        contextBox.style.display = 'none';
+let contextMinimized = false;
+
+function sendMessage() {
+    const userInput = document.getElementById('user-input');
+    const message = userInput.value.trim();
+    if (message) {
+        addMessageToChat('user', message);
+        userInput.value = '';
+        setTimeout(() => {
+            // Simulating bot response
+            addMessageToChat('bot', generateBotResponse(message));
+        }, 1000);
     }
 }
 
-function sendMessage() {
-    const userInput = document.getElementById('user-input').value;
-    // Call your API to send message and get response
-    addMessage(userInput, 'user');
-    document.getElementById('user-input').value = '';
-    fetchResponse(userInput);
+function setContext() {
+    const contextInput = document.getElementById('context-input');
+    const context = contextInput.value.trim();
+    if (context) {
+        // Handle context setting logic here
+        console.log("Context set:", context);
+        contextInput.value = '';
+    }
 }
 
-function addMessage(message, sender) {
-    const messageContainer = document.getElementById('messages');
+function toggleContext() {
+    const contextContainer = document.querySelector('.context-container');
+    contextMinimized = !contextMinimized;
+    if (contextMinimized) {
+        contextContainer.style.display = 'none';
+    } else {
+        contextContainer.style.display = 'flex';
+    }
+}
+
+function addMessageToChat(sender, message) {
+    const chatBox = document.getElementById('chat-box');
     const messageElement = document.createElement('div');
+    messageElement.className = `message ${sender}`;
     messageElement.textContent = message;
-    messageElement.className = sender;
-    messageContainer.appendChild(messageElement);
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function fetchResponse(userInput) {
-    // Simulate API call
-    setTimeout(() => {
-        const response = 'This is a response from the AI.';
-        addMessage(response, 'ai');
-    }, 1000);
-}
-
-function loadConversations() {
-    // Load conversation list from a JSON database or API
-    const conversations = ['Conversation 1', 'Conversation 2', 'Conversation 3'];
-    const conversationList = document.getElementById('conversation-list');
-    conversations.forEach(conversation => {
-        const li = document.createElement('li');
-        li.textContent = conversation;
-        conversationList.appendChild(li);
-    });
+function generateBotResponse(message) {
+    // Simple bot response logic (can be replaced with actual logic)
+    return "You said: " + message;
 }
