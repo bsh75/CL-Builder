@@ -1,7 +1,7 @@
 document.getElementById('send-btn').addEventListener('click', sendMessage);
 document.getElementById('user-input').addEventListener('input', resizeTextarea);
 document.getElementById('user-input').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === 'Enter' && event.shiftKey) {
         event.preventDefault();
         sendMessage();
     }
