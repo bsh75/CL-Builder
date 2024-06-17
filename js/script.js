@@ -1,4 +1,5 @@
 document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('user-input').addEventListener('input', resizeTextarea);
 document.getElementById('user-input').addEventListener('keypress', function(event) {
     if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
@@ -7,9 +8,7 @@ document.getElementById('user-input').addEventListener('keypress', function(even
 });
 
 document.getElementById('set-context-btn').addEventListener('click', setContext);
-document.getElementById('minimize-context-btn').addEventListener('click', toggleContext);
-
-let contextMinimized = false;
+document.getElementById('context-input').addEventListener('input', resizeContextTextarea);
 
 function sendMessage() {
     const userInput = document.getElementById('user-input');
@@ -17,6 +16,7 @@ function sendMessage() {
     if (message) {
         addMessageToChat('user', message);
         userInput.value = '';
+        resizeTextarea.call(userInput); // Reset height
         setTimeout(() => {
             // Simulating bot response
             addMessageToChat('bot', generateBotResponse(message));
@@ -30,17 +30,26 @@ function setContext() {
     if (context) {
         // Handle context setting logic here
         console.log("Context set:", context);
-        contextInput.value = '';
+        contextInput.style.height = '24px'; // Reset height to 1 line
     }
 }
 
-function toggleContext() {
-    const contextContainer = document.querySelector('.context-container');
-    contextMinimized = !contextMinimized;
-    if (contextMinimized) {
-        contextContainer.style.display = 'none';
+function resizeTextarea() {
+    this.style.height = '24px'; // Reset height
+    if (this.scrollHeight <= 96) { // Maximum height for 4 lines
+        this.style.height = this.scrollHeight + 'px';
     } else {
-        contextContainer.style.display = 'flex';
+        this.style.height = '96px';
+    }
+}
+
+function resizeContextTextarea() {
+    this.style.height = '24px'; // Reset height
+    const maxHeight = window.innerHeight - document.querySelector('.chat-input').offsetHeight - document.querySelector('.chat-box').offsetHeight - 50; // Max height calculation
+    if (this.scrollHeight <= maxHeight) {
+        this.style.height = this.scrollHeight + 'px';
+    } else {
+        this.style.height = maxHeight + 'px';
     }
 }
 
