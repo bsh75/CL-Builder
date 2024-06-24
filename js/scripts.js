@@ -8,7 +8,14 @@ document.getElementById('user-input').addEventListener('keypress', function(even
 });
 
 document.getElementById('set-context-btn').addEventListener('click', setContext);
-document.getElementById('context-input').addEventListener('input', resizeContextTextarea);
+document.getElementById('context-input').addEventListener('input', resizeTextarea);
+const initialContextHeight = getComputedStyle('context-input').getPropertyValue('height');
+document.getElementById('context-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        event.preventDefault();
+        setContext();
+    }
+});
 
 function sendMessage() {
     const userInput = document.getElementById('user-input');
@@ -30,21 +37,21 @@ function setContext() {
     if (context) {
         // Handle context setting logic here
         console.log("Context set:", context);
-        contextInput.style.height = '24px'; // Reset height to 1 line
+        contextInput.style.height = 'auto'; // Reset height to auto
+        console.log(initialContextHeight)
+        contextInput.style.height = initialContextHeight
+
+        // contextInput.scrollHeight + 'px'; // Adjust to fit content
     }
 }
 
 function resizeTextarea() {
-    this.style.height = '24px'; // Reset height
-    if (this.scrollHeight <= 96) { // Maximum height for 4 lines
-        this.style.height = this.scrollHeight + 'px';
-    } else {
-        this.style.height = '96px';
-    }
+    this.style.height = 'auto'; // Reset height to auto
+    this.style.height = this.scrollHeight + 'px'; // Adjust height to fit content
 }
 
 function resizeContextTextarea() {
-    this.style.height = '24px'; // Reset height
+    this.style.height = 'auto'; // Reset height to auto
     const maxHeight = window.innerHeight - document.querySelector('.chat-input').offsetHeight - document.querySelector('.chat-box').offsetHeight - 50; // Max height calculation
     if (this.scrollHeight <= maxHeight) {
         this.style.height = this.scrollHeight + 'px';

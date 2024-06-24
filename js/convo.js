@@ -1,69 +1,65 @@
-// initialise all necessary packages 
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Import the correct module
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const prompt = require('prompt-sync')();
-require('dotenv').config();
-
-// Access your API key as an environment variable and initialise API
-
-// this is what is playing up
-const GEMINI_API_KEY = process.env.GEM_API_KEY 
-
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-
-let context = 'You have a lisp'
-context = 'You are a hilarious friendly person who identifies as an egg and has an unnatural obsession with eggs. Your name is Rufus.'
-context = 'You can only speak japanese'
-context = 'You will write cover letters for a Mechatronics engineer who worked as a building automation engineer for Honeywell. His strengths are adaptability, collaboration, visualisation, and ideation. He is looking to apply for Jobs that use your passion for software (Python, C, Javascript, HTML, CSS) robotics, and computer vision. Where these skills are not directly related to a job listing, mention that you are looking to branch out and apply my technical background skills and strengths in other areas. If user input is not a job listing respond with "please input a job listing"'
-
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-    systemInstruction: context
-  });
-const chat = model.startChat({
-  history: [
-    {
-      role: "user",
-      parts: [{ text: "Hello" }],
+document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('user-input').addEventListener('input', resizeTextarea);
+document.getElementById('user-input').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
     }
-    ,
-    {
-        role: "model",
-        parts: [{ text: "Hello, how can i help you?" }],
-    }
-    //   ,
-    // {
-    //   role: "system",
-    //   parts: [{ text: "you will have a lisp for the rest of the conversation" }],
-    // }
-  ],
-//   generationConfig: {
-//     maxOutputTokens: 100,
-//   },
 });
 
-async function run() {
-  // The Gemini 1.5 models are versatile and work with multi-turn conversations (like chat)
+document.getElementById('set-context-btn').addEventListener('click', setContext);
+document.getElementById('context-input').addEventListener('input', resizeContextTextarea);
 
-
-  let msg = prompt("What ");
-
-  let result = await chat.sendMessage(msg);
-  let response = await result.response;
-  let text = response.text();
-  console.log(text);
-
-  while (msg != "Bye") {
-      msg = prompt("what again: ");
-      result = await chat.sendMessage(msg);
-      response = await result.response;
-      text = response.text();
-      console.log(text);
-    //   history = await chat.getHistory();
-    //   console.log(history);
-  }
-
+function sendMessage() {
+    const userInput = document.getElementById('user-input');
+    const message = userInput.value.trim();
+    if (message) {
+        addMessageToChat('user', message);
+        userInput.value = '';
+        resizeTextarea.call(userInput); // Reset height
+        setTimeout(() => {
+            // Simulating bot response
+            addMessageToChat('bot', generateBotResponse(message));
+        }, 1000);
+    }
 }
 
-run();
+function setContext() {
+    const contextInput = document.getElementById('context-input');
+    const context = contextInput.value.trim();
+    if (context) {
+        // Handle context setting logic here
+        console.log("Context set:", context);
+        contextInput.style.height = 'auto'; // Reset height to auto
+        contextInput.style.height = contextInput.scrollHeight + 'px'; // Adjust to fit content
+    }
+}
+
+function resizeContextTextarea() {
+    this.style.height = 'auto'; // Reset height to auto
+    this.style.height = this.scrollHeight + 'px'; // Adjust height to fit content
+}
+
+function resizeTextarea() {
+    this.style.height = 'auto'; // Reset height to auto
+    const maxHeight = window.innerHeight - document.querySelector('.chat-input').offsetHeight - document.querySelector('.chat-box').offsetHeight - 50; // Max height calculation
+    if (this.scrollHeight <= maxHeight) {
+        this.style.height = this.scrollHeight + 'px';
+    } else {
+        this.style.height = maxHeight + 'px';
+    }
+}
+
+function addMessageToChat(sender, message) {
+    const chatBox = document.getElementById('chat-box');
+    const messageElement = document.createElement('div');
+    messageElement.className = `message ${sender}`;
+    messageElement.textContent = message;
+    chatBox.appendChild(messageElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function generateBotResponse(message) {
+    // Simple bot response logic (can be replaced with actual logic)
+    return "You said: " + message;
+}
