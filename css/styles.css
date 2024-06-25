@@ -1,6 +1,16 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #7000f0;
+    --background-color: #ffffff;
+    --background-shaded: #f0f0f0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --text-color: #333;
+    --border-big-radius: 8px;
+    --border-small-radius: 4px;
+} 
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: var(--background-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,23 +19,33 @@ body {
     padding: 0;
 }
 
+button {
+    font-family: monospace;
+    color: var(--text-color);
+}
+
 .context-container {
     width: 400px;
     max-width: 100%;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+    box-shadow: 0 0 10px var(--shadow-color);
     margin-bottom: 10px;
     position: relative;
+    border-radius: var(--border-big-radius);
+}
+
+.context-input {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-big-radius);
+    display: flex;
+    padding: 10px;
+    background-color: var(--background-color);
 }
 
 .context-container textarea {
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--background-shaded);
+    border-radius: var(--border-small-radius);
     resize: none;
     width: calc(100% - 20px);
     height: auto;
@@ -36,24 +56,24 @@ body {
 .context-container button {
     padding: 5px 10px;
     border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
+    background-color: var(--background-shaded);
+    /* color: var(--background-color); */
+    border-radius: var(--border-small-radius);
     cursor: pointer;
     margin-top: 5px;
-    align-self: flex-end;
+    /* align-self: flex; */
 }
 
 .context-container button:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-color);
 }
 
 .chat-container {
     width: 400px;
     max-width: 100%;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: var(--background-color);
+    border-radius: var(--border-big-radius);
+    box-shadow: 0 0 10px var(--shadow-color);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -62,23 +82,45 @@ body {
 
 .chat-box {
     flex-grow: 1;
-    padding: 20px;
+    padding: 10px;
     overflow-y: auto;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--background-color);
 }
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: var(--border-small-radius);
+}
+
+.message.user {
+    background-color: var(--background-shaded);
+    align-self: flex-end;
+}
+
+.message.bot {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    align-self: flex-start;
+}
+
+.message pre {
+    margin: 0;              
+    white-space: pre-wrap;
+    word-wrap: break-word;  
+}  
 
 .chat-input {
     display: flex;
     padding: 10px;
-    background-color: #fafafa;
+    background-color: var(--background-color);
 }
-
 
 .chat-input textarea {
     flex-grow: 1;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--background-shaded);
+    border-radius: var(--border-small-radius);
     resize: none;
     height: auto;
     max-height: 200px;
@@ -89,49 +131,32 @@ body {
 
 .scrollable::-webkit-scrollbar {
     width: 8px;             /* Width of the scrollbar */
-  }
-  
+}
+
 .scrollable::-webkit-scrollbar-track {
-background: #f1f1f1;    /* Color of the track */
+    background: var(--background-color);    /* Color of the track */
 }
 
 .scrollable::-webkit-scrollbar-thumb {
-background-color: #888; /* Color of the thumb */
-border-radius: 4px;     /* Rounded corners */
+    background-color: #888; /* Color of the thumb */
+    border-radius: var(--border-small-radius);
 }
 
 .scrollable::-webkit-scrollbar-thumb:hover {
-background: #555;       /* Darker color on hover */
+    background: #555;       /* Darker color on hover */
 }
 
 .chat-input button {
-    padding: 10px 20px;
+    padding: 10px;
     margin-left: 10px;
     border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border-radius: var(--border-small-radius);
     cursor: pointer;
 }
 
 .chat-input button:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-color);
 }
 
-.message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 4px;
-    max-width: 80%;
-}
-
-.message.user {
-    background-color: #007bff;
-    color: white;
-    align-self: flex-end;
-}
-
-.message.bot {
-    background-color: #f1f1f1;
-    align-self: flex-start;
-}

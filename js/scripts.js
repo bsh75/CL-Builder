@@ -52,7 +52,14 @@ function addMessageToChat(sender, message) {
     const chatBox = document.getElementById('chat-box');
     const messageElement = document.createElement('div');
     messageElement.className = `message ${sender}`;
-    messageElement.textContent = message;
+
+    // Create a <pre> element to preserve newlines
+    const preElement = document.createElement('pre');
+    preElement.textContent = message;
+
+    // Append the <pre> to the messageElement
+    messageElement.appendChild(preElement);
+
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
