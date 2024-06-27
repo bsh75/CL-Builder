@@ -19,19 +19,42 @@ document.getElementById('context-input').addEventListener('keypress', function(e
     }
 });
 
-function sendMessage() {
+async function sendMessage() {
     const userInput = document.getElementById('user-input');
     const message = userInput.value.trim();
+  
     if (message) {
-        addMessageToChat('user', message);
-        userInput.value = '';
-        resizeTextarea.call(userInput); // Reset height
-        setTimeout(() => {
-            // Simulating bot response
-            addMessageToChat('bot', generateBotResponse(message));
-        }, 1000);
+      addMessageToChat('user', message);
+      userInput.value = '';
+      resizeTextarea.call(userInput);
+  
+      try {
+        // Send message to your API endpoint
+        const response = await fetch('/chat', { 
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            message: message, 
+            newContext: contextTextarea.value.trim() 
+          })
+        });
+  
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+  
+        const data = await response.json();
+        const botResponse = data.response;
+        addMessageToChat('bot', botResponse);
+  
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        // Handle errors, e.g., display an error message to the user
+      }
     }
-}
+  }
 
 function setContext() {
     const contextInput = document.getElementById('context-input');
@@ -68,3 +91,4 @@ function generateBotResponse(message) {
     // Simple bot response logic (can be replaced with actual logic)
     return "You said: " + message;
 }
+
