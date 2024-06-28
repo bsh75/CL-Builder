@@ -57,15 +57,24 @@ app.post('/context', async (req, res) => {
   const newContext = req.body.context;
   const oldHistory = chat.history
   console.log("history: ", oldHistory)
+  console.log("newContext: ", newContext)
 
-  chat = model.startChat({
-    history: oldHistory,
-  })
-
+  // Update the model with new context
   if (newContext) {
-    model.systemInstruction = newContext;
-    // chat.history = []; // Clear chat history
+    model.systemInstruction = {
+      role: 'system',
+      parts: [ { text: newContext } ]
+    };
   }
+  
+  try {
+    chat = model.startChat({
+      history: oldHistory,
+    })
+  } catch (error) {
+    console.error("Error in starting new chat: ", error)
+  }
+    
   console.log("New context recieved is: ", newContext)
   res.json({ newContext });
 });
