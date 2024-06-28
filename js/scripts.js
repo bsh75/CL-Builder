@@ -30,14 +30,13 @@ async function sendMessage() {
   
       try {
         // Send message to your API endpoint
-        const response = await fetch('/chat', { 
+        const response = await fetch('http://localhost:3000/chat', { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
             message: message, 
-            newContext: contextTextarea.value.trim() 
           })
         });
   
@@ -54,15 +53,39 @@ async function sendMessage() {
         // Handle errors, e.g., display an error message to the user
       }
     }
-  }
+}
 
-function setContext() {
+async function setContext() {
     const contextInput = document.getElementById('context-input');
     const context = contextInput.value.trim();
     if (context) {
         // Handle context setting logic here
         console.log("Context set:", context);
         contextInput.style.height = initialContextHeight
+        try {
+            // Send message to your API endpoint
+            const response = await fetch('http://localhost:3000/context', { 
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ 
+                context: context, 
+              })
+            });
+      
+            if (!response.ok) {
+              throw new Error('Network response was not ok.');
+            }
+      
+            const data = await response.json();
+            const contextResponse = data.response;
+            addMessageToChat('context', contextResponse);
+      
+          } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            // Handle errors, e.g., display an error message to the user
+          }
     }
 }
 

@@ -22,7 +22,7 @@ const model = genAI.getGenerativeModel({
   systemInstruction: context,
 });
 
-const chat = model.startChat({
+let chat = model.startChat({
   history: [
     {
       role: 'user',
@@ -39,14 +39,10 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/chat', async (req, res) => {
-  const { message, newContext } = req.body;
+  const message = req.body.message;
 
-  if (newContext) {
-    context = newContext;
-    model.systemInstruction = context;
-    chat.history = []; // Clear chat history
-  }
-
+  console.log("message recieved is: ", message)
+  console.log("with context is: ", model.systemInstruction)
   try {
     const result = await chat.sendMessage(message);
     const response = await result.response.text();
@@ -57,19 +53,24 @@ app.post('/chat', async (req, res) => {
   }
 });
 
+app.post('/context', async (req, res) => {
+  const newContext = req.body.context;
+  const oldHistory = chat.history
+  console.log("history: ", oldHistory)
+
+  chat = model.startChat({
+    history: oldHistory,
+  })
+
+  if (newContext) {
+    model.systemInstruction = newContext;
+    // chat.history = []; // Clear chat history
+  }
+  console.log("New context recieved is: ", newContext)
+  res.json({ newContext });
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-// This is to simulate running in a command line
-async function run() {
-  let msg = prompt("What: ");
-  while (msg !== "Bye") {
-    const result = await chat.sendMessage(msg);
-    const response = await result.response.text();
-    console.log(response);
-    msg = prompt("What again: ");
-  }
-}
-
-run();
