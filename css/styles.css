@@ -104,6 +104,12 @@ button {
     align-self: flex-start;
 }
 
+.message.context {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    align-self: flex-start;
+}
+
 .message pre {
     margin: 0;              
     white-space: pre-wrap;

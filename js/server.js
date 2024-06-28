@@ -74,23 +74,23 @@ app.post('/context', async (req, res) => {
 
     // Update the model's system instruction with the new context
     if (newContext) {
-        model.systemInstruction = {
-            role: 'system',           
-            parts: [{ text: newContext }] 
-        };
+      model.systemInstruction = {
+          role: 'system',           
+          parts: [{ text: newContext }] 
+      };
     }
 
     try {
-        // Start a new chat session with the updated model and old history
-        chat = model.startChat({
-            history: oldHistory,
-        });
+      // Start a new chat session with the updated model and old history
+      chat = model.startChat({
+          history: oldHistory,
+      });
+      console.log("New context received is:", newContext);
+      res.json({ newContext }); // Acknowledge the context update
     } catch (error) {
-        console.error("Error in starting new chat:", error); // Log errors
+      console.error("Error in starting new chat:", error); // Log errors
     }
 
-    console.log("New context received is:", newContext);
-    res.json({ newContext }); // Acknowledge the context update
 });
 
 // Start the server

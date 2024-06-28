@@ -79,8 +79,8 @@ async function setContext() {
             }
       
             const data = await response.json();
-            const contextResponse = data.response;
-            addMessageToChat('context', contextResponse);
+            console.log("context response", context)
+            addMessageToChat('context', "CONTEXT: "+context);
       
           } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -110,8 +110,4 @@ function addMessageToChat(sender, message) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function generateBotResponse(message) {
-    // Simple bot response logic (can be replaced with actual logic)
-    return "You said: " + message;
-}
 
